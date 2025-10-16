@@ -1,0 +1,85 @@
+## buat dulu 
+entity > repo > dto > service > controller 
+
+## Booking (Entity, Repo, Dto, Service, Controller)
+## BookingService
+
+## buat migration relasi di inventoryservice 
+
+## buat Customer (Entity, Repo, Dto, Service, Controller)
+## CustomerService
+ - inject BookingService ke CustomerService :
+    - pada createBoking()
+
+## balik ke inventoryservice project :
+  - buat inventoryForEvent (controller)
+  - getEventInventory (service) 
+
+## tambhkan folder client/InventoryService di BookingService:
+    - buat InventoryServiceClient (feign client)
+    - buat InventoryResponse (dto)
+
+## setting client application.properties
+ - url inventoryservice
+ - mysql database bookingservice
+ - jalankan bookingservice & inventoryservice
+
+## tambah Customer table di mysql manual
+
+## test di postman
+ - booking endpoint
+
+## Kafka 
+doc :
+https://kafka.apache.org/quickstart
+
+## tambhkan config kafka di inventoryservice docker-compose.yml
+ - tambhkan service zookeeper
+ - tambhkan service kafka broker 
+  (kafka broker butuh zookeeper untuk berjalan)
+ - tambah kafka ui (untuk monitoring kafka broker)
+ - tambah kafka schema registry (untuk avro serialization)
+
+- zookeeper adalah service yang mengatur kafka manage cluster (kafka butuh zookeeper untuk berjalan kafka broker)
+- kafka broker adalah service utama kafka yang bertugas menyimpan data dan melayani request dari client
+
+##  build ulang docker-compose inventoryservice
+ - docker-compose down
+ - docker-compose up -d
+
+## setelah buat booking event di booking service :
+## install depedency kafka di bookingservice 
+ - spring-kafka
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+
+## setelah inject kafka template di BookingService :
+  - buat booking event
+  - kirim booking event ke kafka topic "booking"
+
+## setting application.properties bookingservice :
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.template.default-topic=booking
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+
+## test di postman (run bookingservice & inventoryservice) :
+ - booking endpoint
+ - cek di kafka ui topic booking
+
+## cek loging di bookingservice
+ - cek booking event yang dikirim ke kafka topic booking
+
+## cek dengan kafka UI di localhost :
+http://localhost:8084/ui/clusters/create-new-cluster
+ - masukan bootstrap server : localhost:9092
+ - klik validate > submit
+ - klik topics
+ - klik topic booking
+ - cek message yang diterima di topic booking
+## send message di topic booking  
+## cek kafka ui
+
+## jika sudah buat project order service selanjutnya 

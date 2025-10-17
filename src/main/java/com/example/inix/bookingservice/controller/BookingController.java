@@ -14,12 +14,8 @@ import com.example.inix.bookingservice.service.BookingService;
 @RequestMapping("/api/v1")
 public class BookingController {
 
-    private final BookingService bookingService;
-
     @Autowired
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
+    private BookingService bookingService;
 
     @PostMapping(consumes = "application/json", produces = "application/json", path = "/booking")
     public BookingResponse createBooking(@RequestBody BookingRequest request) {

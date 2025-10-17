@@ -12,7 +12,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new io.swagger.v3.oas.models.info.Info()
                         .title("Booking Service API")
-                        .description("Booking Service API for LeetJourney")
+                        .description("Booking Service API for Inix application")
                         .version("v1.0.0"));
 
     }

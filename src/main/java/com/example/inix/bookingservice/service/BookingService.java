@@ -20,29 +20,21 @@ import java.math.BigDecimal;
 public class BookingService {
 
     @Autowired
-    private final CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    private final InventoryServiceClient inventoryServiceClient;
+    private InventoryServiceClient inventoryServiceClient;
 
     @Autowired
-    private final KafkaTemplate<String, BookingEvent> kafkaTemplate;
-
-    public BookingService(final CustomerRepository customerRepository,
-            final InventoryServiceClient inventoryServiceClient,
-            final KafkaTemplate<String, BookingEvent> kafkaTemplate) {
-        this.customerRepository = customerRepository;
-        this.inventoryServiceClient = inventoryServiceClient;
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private KafkaTemplate<String, BookingEvent> kafkaTemplate;
 
     public BookingResponse createBooking(final BookingRequest request) {
-        // check if user exists
+        // check jika customer ada (userId valid)
         final Customer customer = customerRepository.findById(request.getUserId()).orElse(null);
         if (customer == null) {
             throw new RuntimeException("User not found");
         }
-        // check if there is enough inventory
+        // check jika inventory cukup (eventId valid & capacity cukup)
         final InventoryResponse inventoryResponse = inventoryServiceClient.getInventory(request.getEventId());
         log.info("Inventory Response: {}", inventoryResponse);
         if (inventoryResponse.getCapacity() < request.getTicketCount()) {
